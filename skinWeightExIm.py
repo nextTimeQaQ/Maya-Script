@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 ## skin weight import and export
 ## 修改自 重庆_绑定_CRGlenn 2787723550
 ## 导出路径  self.path_text = cmds.textFieldGrp(l="Path:", tx=r"G:\file")
