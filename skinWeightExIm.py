@@ -3,8 +3,7 @@
 
 ## skin weight import and export
 ## 修改自 重庆_绑定_CRGlenn 2787723550
-## 导出路径  self.path_text = cmds.textFieldGrp(l="Path:", tx=r"G:\file")
-## 文件名称  self.file_name = cmds.textFieldGrp(l="File Name:", tx="testw")
+
 ## 导出选中模型的蒙皮权重
 ## 导出当前选中模型的第一个模型的权重，权重写出只写出权重数据，不包含骨骼数量，顺序，名称，导入也是相同
 
