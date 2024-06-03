@@ -4,8 +4,12 @@
 ## skin weight import and export
 ## 修改自 重庆_绑定_CRGlenn 2787723550
 
-## 导出选中模型的蒙皮权重
-## 导出当前选中模型的第一个模型的权重，权重写出只写出权重数据，不包含骨骼数量，顺序，名称，导入也是相同
+## 导出模型权重：
+## 参数1：权重文件路径
+## 参数2：0为导出，1为导入
+## 参数3：模型名称
+## 权重写出只写出权重数据，不包含骨骼数量，顺序，名称，导入也是相同
+
 
 import maya.cmds as cmds
 import maya.mel as mel
@@ -16,12 +20,15 @@ from maya.api import OpenMaya, OpenMayaAnim
 import pickle as pickle
 
 class ExInSkin:
-    def __init__(self,file_path,e_i):
+    def __init__(self,file_path,e_i,geo):
         self.file_path = file_path
         self.e_i = e_i
+        self.geo = geo
 
     def exportSkin(self, *args):
-        geo = cmds.ls(sl=1, type="transform")[0]
+        # geo = cmds.ls(sl=1, type="transform")[0]
+        geo = self.geo
+        print(geo)
         geo_cluster = mel.eval('findRelatedSkinCluster "{}"'.format(geo))
         num_vtxs = cmds.polyEvaluate(geo, v=True)
         sel_list = OpenMaya.MSelectionList()
@@ -35,16 +42,16 @@ class ExInSkin:
         shape_comp = single_fn.create(OpenMaya.MFn.kMeshVertComponent)
         single_fn.addElements(comp_ids)
         flat_weights, inf_count = skin_fn.getWeights(shape_dag, shape_comp)
-        weight_file = open(self.file_path,"wb")
-        pickle.dump(list(flat_weights),weight_file)
-        weight_file.close()
+        with open(self.file_path,"wb") as f:
+            pickle.dump(list(flat_weights),f)
 
     def ImportSkin(self, *args):
         
         with open(self.file_path, "rb") as skin_file:
             flat_weights = pickle.load(skin_file)
 
-        geo = cmds.ls(sl=1, type="transform")[0]
+        # geo = cmds.ls(sl=1, type="transform")[0]
+        geo = self.geo
         geo_cluster = mel.eval('findRelatedSkinCluster "{}"'.format(geo))
         num_vtxs = cmds.polyEvaluate(geo, v=True)
 
@@ -72,11 +79,13 @@ class ExInSkin:
         else:
             self.ImportSkin()
 
-# ex_w = ExInSkin(r"D:\file\test.weight",0)
+
+# ex_w = ExInSkin(r"G:\file\test.weight",0,"model_name")
 # ex_w.main()
 ## 导出权重
 
 
-# im_w = ExInSkin(r"D:\file\test.weight",1)
+# im_w = ExInSkin(r"G:\file\test.weight",1,"model_name")
 # im_w.main()
 ## 导入权重
+
